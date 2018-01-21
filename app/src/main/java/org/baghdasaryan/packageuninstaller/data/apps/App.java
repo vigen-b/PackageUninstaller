@@ -1,8 +1,5 @@
 package org.baghdasaryan.packageuninstaller.data.apps;
 
-/**
- * Created by vigen on 12/21/17.
- */
 
 public class App {
 

@@ -11,9 +11,16 @@ import org.baghdasaryan.packageuninstaller.data.apps.App;
 
 import java.util.ArrayList;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHolder> {
 
     private ArrayList<App> data = new ArrayList<>();
+    private OnAppItemClickListener listener = null;
+
+    AppListAdapter(OnAppItemClickListener l) {
+        listener = checkNotNull(l, "Listner can not be null");
+    }
 
 
     @Override
@@ -30,8 +37,7 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String name = data.get(position).getName();
-        holder.getAppNameTextView().setText(name);
+        holder.bind(data.get(position));
     }
 
     @Override
@@ -41,14 +47,26 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView appNameTextView = null;
+        private App app = null;
 
         ViewHolder(View itemView) {
             super(itemView);
             appNameTextView = itemView.findViewById(R.id.app_name);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onClick(app);
+                }
+            });
         }
 
-        TextView getAppNameTextView() {
-            return appNameTextView;
+        void bind(App app) {
+            this.app = app;
+            appNameTextView.setText(app.getName());
         }
+    }
+
+    interface OnAppItemClickListener {
+        void onClick(App app);
     }
 }
